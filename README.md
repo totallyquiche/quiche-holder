@@ -1,6 +1,6 @@
 # Quiche Holder
 
-A simple API for generating placeholder images of the wonderfully versatile, always delectable quiche!
+A simple [Lumen](https://lumen.laravel.com/) API for generating placeholder images of the wonderfully versatile, always delectable quiche!
 
 ## Usage
 
