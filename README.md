@@ -1,24 +1,18 @@
-# Lumen PHP Framework
+# Quiche Holder
 
-[![Build Status](https://travis-ci.org/laravel/lumen-framework.svg)](https://travis-ci.org/laravel/lumen-framework)
-[![Total Downloads](https://img.shields.io/packagist/dt/laravel/framework)](https://packagist.org/packages/laravel/lumen-framework)
-[![Latest Stable Version](https://img.shields.io/packagist/v/laravel/framework)](https://packagist.org/packages/laravel/lumen-framework)
-[![License](https://img.shields.io/packagist/l/laravel/framework)](https://packagist.org/packages/laravel/lumen-framework)
+A simple API for generating placeholder images of the wonderfully versatile, always delectable quiche!
 
-Laravel Lumen is a stunningly fast PHP micro-framework for building web applications with expressive, elegant syntax. We believe development must be an enjoyable, creative experience to be truly fulfilling. Lumen attempts to take the pain out of development by easing common tasks used in the majority of web projects, such as routing, database abstraction, queueing, and caching.
+## Usage
 
-## Official Documentation
+Use the `images` endpoint and pass in the desired dimensions: `https://[APPLICATION URL]/images/[WIDTH]/[HEIGHT]`
 
-Documentation for the framework can be found on the [Lumen website](https://lumen.laravel.com/docs).
+## Examples
 
-## Contributing
+`https://quiche-holder.local/images/250/150`
 
-Thank you for considering contributing to Lumen! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+<img src="storage/examples/quiche-250x150.jpg" width="250" height="150">
 
-## Security Vulnerabilities
 
-If you discover a security vulnerability within Lumen, please send an e-mail to Taylor Otwell at taylor@laravel.com. All security vulnerabilities will be promptly addressed.
+`https://quiche-holder.local/images/500/175`
 
-## License
-
-The Lumen framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+<img src="storage/examples/quiche-500x175.jpg" width="500" height="175">
