@@ -19,4 +19,4 @@ $router->get('/', function () use ($router) {
     return $router->app->version();
 });
 
-Route::get('/images/{width:[0-9]+}/{height:[0-9]+}', 'ImageController@serve');
+Route::get('/{width:[0-9]+}/{height:[0-9]+}', 'ImageController@serve');

@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use Imagick;
+use AsyncAws\Lambda\LambdaClient;
 
 class ImageController extends Controller
 {
@@ -13,58 +13,26 @@ class ImageController extends Controller
      */
     public function serve(int $width, int $height) : void
     {
+        $lambda = new LambdaClient([
+            'accessKeyId' => env('AWS_LAMBDA_ACCESS_KEY_ID'),
+            'accessKeySecret' => env('AWS_LAMBDA_ACCESS_KEY_SECRET'),
+            'region' => 'us-east-1',
+        ]);
+
+        $payload = [
+            'width' => $width,
+            'height' => $height
+        ];
+
+        $result = $lambda->invoke([
+            'FunctionName' => 'quiche-holder-engine-production-getImage',
+            'Payload' => json_encode($payload),
+        ]);
+
         header('Content-Type: image/jpg');
 
-        echo self::scaleAndCropImage('../public/images/quiche.jpg', $width, $height);
+        echo base64_decode($result->getPayload());
 
         exit;
     }
-
-    /**
-     * Scale and crop and image using Imagick. Returns the image as a blob.
-     *
-     * @param string $image_file_path
-     * @param int    $width
-     * @param int    $height
-     *
-     * @return string
-     */
-
-    private static function scaleAndCropImage(string $image_file_path, int $width, int $height) : string
-    {
-        $image = new Imagick(realpath($image_file_path));
-
-        $ratio = $width / $height;
-
-        // Original image dimensions
-        $original_width = $image->getImageWidth();
-        $original_height = $image->getImageHeight();
-        $original_ratio = $original_width / $original_height;
-
-        // Determine new image dimensions to scale to.
-        // Also determine cropping coordinates.
-        if ($ratio > $original_ratio) {
-          $new_width = $width;
-          $new_height = $width / $original_width * $original_height;
-          $crop_x = 0;
-          $crop_y = intval(($new_height - $height) / 2);
-        } else {
-          $new_width = $height / $original_height * $original_width;
-          $new_height = $height;
-          $crop_x = intval(($new_width - $width) / 2);
-          $crop_y = 0;
-        }
-
-        // Scale image to fit minimal of provided dimensions.
-        $image->scaleImage($new_width, $new_height, true);
-
-        // Now crop image to exactly fit provided dimensions.
-        $image->cropImage($width, $height, $crop_x, $crop_y);
-
-        $image_blob = $image->getImageBlob();
-
-        $image->clear();
-
-        return $image_blob;
-      }
 }

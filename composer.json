@@ -6,6 +6,8 @@
     "type": "project",
     "require": {
         "php": "^7.3|^8.0",
+        "async-aws/lambda": "^1.1",
+        "bref/bref": "^1.0",
         "laravel/lumen-framework": "^8.0"
     },
     "require-dev": {
