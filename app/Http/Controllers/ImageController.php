@@ -43,7 +43,7 @@ class ImageController extends Controller
      * @return string
      */
     private function getImageBlob(int $width, int $height) : string {
-        $image = new Imagick(Storage::url('app/quiche.jpg'));
+        $image = new Imagick(Storage::disk('local')->path('quiche.jpg'));
 
         $ratio = $width / $height;
 
