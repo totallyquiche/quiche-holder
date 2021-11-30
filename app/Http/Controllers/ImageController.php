@@ -21,7 +21,7 @@ class ImageController extends Controller
         if ($image) {
             $blob = $image->blob;
         } else {
-            $blob = $this->getImageBlobFromApi($width, $height);
+            $blob = $this->getImageBlob($width, $height);
 
             $this->createImage($width, $height, $blob);
         }
@@ -41,24 +41,41 @@ class ImageController extends Controller
      *
      * @return string
      */
-    private function getImageBlobFromApi(int $width, int $height) : string {
-        $lambda = new LambdaClient([
-            'accessKeyId' => env('AWS_LAMBDA_ACCESS_KEY_ID'),
-            'accessKeySecret' => env('AWS_LAMBDA_ACCESS_KEY_SECRET'),
-            'region' => 'us-east-1',
-        ]);
+    private function getImageBlob(int $width, int $height) : string {
+        $image = new Imagick('quiche.jpg');
 
-        $payload = [
-            'width' => $width,
-            'height' => $height
-        ];
+        $ratio = $width / $height;
 
-        $result = $lambda->invoke([
-            'FunctionName' => 'quiche-holder-engine-production-getImage',
-            'Payload' => json_encode($payload),
-        ]);
+        // Original image dimensions
+        $original_width = $image->getImageWidth();
+        $original_height = $image->getImageHeight();
+        $original_ratio = $original_width / $original_height;
 
-        return base64_decode($result->getPayload());
+        // Determine new image dimensions to scale to.
+        // Also determine cropping coordinates.
+        if ($ratio > $original_ratio) {
+            $new_width = $width;
+            $new_height = $width / $original_width * $original_height;
+            $crop_x = 0;
+            $crop_y = intval(($new_height - $height) / 2);
+        } else {
+            $new_width = $height / $original_height * $original_width;
+            $new_height = $height;
+            $crop_x = intval(($new_width - $width) / 2);
+            $crop_y = 0;
+        }
+
+        // Scale image to fit minimal of provided dimensions.
+        $image->scaleImage((int) $new_width, (int) $new_height, true);
+
+        // Now crop image to exactly fit provided dimensions.
+        $image->cropImage($width, $height, $crop_x, $crop_y);
+
+        $image_blob = $image->getImageBlob();
+
+        $image->clear();
+
+        return base64_encode($image_blob);
     }
 
     /**
