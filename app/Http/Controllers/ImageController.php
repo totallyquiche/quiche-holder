@@ -76,7 +76,7 @@ class ImageController extends Controller
 
         $image->clear();
 
-        return base64_encode($image_blob);
+        return $image_blob;
     }
 
     /**
