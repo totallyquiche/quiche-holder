@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Image;
 use \Imagick;
+use Illuminate\Support\Facades\Storage;
 
 class ImageController extends Controller
 {
@@ -42,7 +43,7 @@ class ImageController extends Controller
      * @return string
      */
     private function getImageBlob(int $width, int $height) : string {
-        $image = new Imagick('quiche.jpg');
+        $image = new Imagick(Storage::url('quiche.jpg'));
 
         $ratio = $width / $height;
 
