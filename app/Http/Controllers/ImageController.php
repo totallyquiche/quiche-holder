@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Image;
-use AsyncAws\Lambda\LambdaClient;
+use \Imagick;
 
 class ImageController extends Controller
 {
